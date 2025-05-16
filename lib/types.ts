@@ -19,6 +19,7 @@ export interface CreateBoxData {
   rewardAmount?: number;
   unlockMethod: 'free' | 'pay' | 'follow' | 'refer';
   commissionRate: number;
+  transactionSignature?: string;
 }
 
 export interface ExploreParams {
@@ -29,11 +30,10 @@ export interface ExploreParams {
   limit?: number;
 }
 
-declare global {
-  interface Window {
-    solana?: {
-      publicKey: { toString: () => string };
-      signMessage: (message: Uint8Array) => Promise<Uint8Array>;
-    };
-  }
+// 避免修改全局接口来防止冲突
+export interface SolanaWallet {
+  publicKey: { toString: () => string };
+  signMessage: (message: Uint8Array) => Promise<Uint8Array>;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
 } 

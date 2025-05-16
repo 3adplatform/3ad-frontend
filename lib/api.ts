@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { CreateBoxData, ExploreParams } from './types';
+
+import {
+  CreateBoxData,
+  ExploreParams,
+} from './types';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://api.3ad.xyz',
@@ -8,12 +12,14 @@ const api = axios.create({
 
 // Add wallet signature verification for axios requests
 api.interceptors.request.use(async (config) => {
-  if (config.requiresAuth) {
-    const { publicKey, signMessage } = window.solana;
-    if (publicKey && signMessage) {
+  // 使用类型断言解决类型问题
+  const customConfig = config as any;
+  if (customConfig.requiresAuth) {
+    const solana = window.solana as any;
+    if (solana?.publicKey && solana?.signMessage) {
       const message = `3AD Auth ${Date.now()}`;
-      const signedMessage = await signMessage(new TextEncoder().encode(message));
-      config.headers.Authorization = `Solana ${publicKey.toString()}.${Buffer.from(signedMessage).toString('base64')}`;
+      const signedMessage = await solana.signMessage(new TextEncoder().encode(message));
+      config.headers.Authorization = `Solana ${solana.publicKey.toString()}.${Buffer.from(signedMessage).toString('base64')}`;
     }
   }
   return config;
@@ -24,16 +30,16 @@ export const boxApi = {
   getBox: (boxId: string) => api.get(`/boxes/${boxId}`),
   
   // Create box
-  createBox: (data: CreateBoxData) => api.post('/boxes', data, { requiresAuth: true }),
+  createBox: (data: CreateBoxData) => api.post('/boxes', data, { requiresAuth: true } as any),
   
   // Unlock box
-  unlockBox: (boxId: string) => api.post(`/boxes/${boxId}/unlock`, {}, { requiresAuth: true }),
+  unlockBox: (boxId: string) => api.post(`/boxes/${boxId}/unlock`, {}, { requiresAuth: true } as any),
   
   // Get user created boxes
-  getUserCreatedBoxes: () => api.get('/user/boxes/created', { requiresAuth: true }),
+  getUserCreatedBoxes: () => api.get('/user/boxes/created', { requiresAuth: true } as any),
   
   // Get user unlocked boxes
-  getUserUnlockedBoxes: () => api.get('/user/boxes/unlocked', { requiresAuth: true }),
+  getUserUnlockedBoxes: () => api.get('/user/boxes/unlocked', { requiresAuth: true } as any),
   
   // Get explore boxes list
   getExploreBoxes: (params: ExploreParams) => api.get('/boxes', { params })

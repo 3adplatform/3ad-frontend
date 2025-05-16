@@ -1,10 +1,19 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import {
+  FC,
+  useEffect,
+  useState,
+} from 'react';
+
 import { useRouter } from 'next/navigation';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { boxApi, contractApi } from '@/lib/api';
+
+import {
+  boxApi,
+  contractApi,
+} from '@/lib/api';
 import { BoxSummary } from '@/lib/types';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 interface BlinkPageProps {
   params: {
@@ -123,7 +132,7 @@ const BlinkPage: FC<BlinkPageProps> = ({ params }) => {
         <div className="bg-white rounded-lg shadow-xl p-6">
           <h2 className="text-lg font-semibold mb-2">解锁奖励</h2>
           <div className="text-2xl font-bold text-primary">
-            {boxData.rewardAmount} {boxData.rewardType === 'sol' ? 'SOL' : boxData.rewardType.toUpperCase()}
+            {boxData.rewardAmount} {boxData.rewardType === 'sol' ? 'SOL' : boxData.rewardType?.toUpperCase()}
           </div>
         </div>
       )}

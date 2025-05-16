@@ -1,11 +1,18 @@
 'use client';
 
-import { FC, useEffect, useRef, useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
+import {
+  FC,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
 import { toPng } from 'html-to-image';
+import { QRCodeSVG } from 'qrcode.react';
+
+import { siteConfig } from '@/config/site';
 import { boxApi } from '@/lib/api';
 import { BoxSummary } from '@/lib/types';
-import { siteConfig } from '@/config/site';
 
 interface PosterPageProps {
   params: {
@@ -117,7 +124,7 @@ const PosterPage: FC<PosterPageProps> = ({ params }) => {
                 <div className="bg-primary/10 p-4 rounded-lg">
                   <div className="text-xl font-semibold mb-2">解锁奖励</div>
                   <div className="text-3xl font-bold text-primary">
-                    {boxData.rewardAmount} {boxData.rewardType === 'sol' ? 'SOL' : boxData.rewardType.toUpperCase()}
+                    {boxData.rewardAmount} {boxData.rewardType === 'sol' ? 'SOL' : boxData.rewardType?.toUpperCase()}
                   </div>
                 </div>
               )}
